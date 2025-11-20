@@ -1,0 +1,11 @@
+[build]
+builder = "nixpacks"
+
+[build.nixpacksPlan.phases.build]
+cmds = [
+    "chmod +x mvnw",
+    "./mvnw clean package -DskipTests -Dmaven.javadoc.skip=true"
+]
+
+[build.nixpacksPlan.start]
+cmd = "java -Dserver.port=$PORT -jar target/*.jar"
