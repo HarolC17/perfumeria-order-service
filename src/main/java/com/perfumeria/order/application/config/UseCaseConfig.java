@@ -22,7 +22,8 @@ public class UseCaseConfig {
     public PagoUseCase pagoUseCase(PagoGateway pagoGateway,
                                    PedidoGateway pedidoGateway,
                                    CatalogoGateway catalogoGateway,
-                                   UsuarioGateway usuarioGateway) {
-        return new PagoUseCase(pagoGateway, pedidoGateway, catalogoGateway,  usuarioGateway);
+                                   UsuarioGateway usuarioGateway,
+                                   NotificationGateway notificationGateway) {
+        return new PagoUseCase(pagoGateway, pedidoGateway, catalogoGateway,  usuarioGateway,   notificationGateway);
     }
 }
