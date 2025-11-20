@@ -1,13 +1,11 @@
 package com.perfumeria.order.domain.usecase;
 
 import com.perfumeria.order.domain.exception.*;
+import com.perfumeria.order.domain.model.Notificacion;
 import com.perfumeria.order.domain.model.Pago;
 import com.perfumeria.order.domain.model.Pedido;
 import com.perfumeria.order.domain.model.UserInfo;
-import com.perfumeria.order.domain.model.gateway.CatalogoGateway;
-import com.perfumeria.order.domain.model.gateway.PagoGateway;
-import com.perfumeria.order.domain.model.gateway.PedidoGateway;
-import com.perfumeria.order.domain.model.gateway.UsuarioGateway;
+import com.perfumeria.order.domain.model.gateway.*;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -19,7 +17,7 @@ public class PagoUseCase {
     private final PedidoGateway pedidoGateway;
     private final CatalogoGateway catalogoGateway;
     private final UsuarioGateway usuarioGateway;
-    // private final NotificationGateway notificationGateway; // 🔔 Descomentar cuando implementes SNS
+    private final NotificationGateway notificationGateway; // 🔔 Descomentar cuando implementes SNS
 
     /**
      * Registrar un nuevo pago
@@ -122,20 +120,20 @@ public class PagoUseCase {
             Pago pagoGuardado = pagoGateway.guardarPago(pago);
 
             // 🔔 NOTIFICACIÓN SMS (Descomenta cuando implementes AWS SNS)
-            // try {
-            //     Notificacion mensaje = Notificacion.builder()
-            //             .tipo("Pago confirmado")
-            //             .email(usuario.getEmail())
-            //             .numeroTelefono(usuario.getNumeroTelefono())
-            //             .mensaje("¡Hola " + usuario.getNombre() + "! Tu pago ha sido confirmado. " +
-            //                     "Referencia: " + referencia + ". Tu pedido #" + pago.getPedidoId() +
-            //                     " será enviado pronto.")
-            //             .build();
-            //
-            //     notificationGateway.enviarMensaje(mensaje);
-            // } catch (Exception e) {
-            //     System.err.println("Error al enviar notificación: " + e.getMessage());
-            // }
+             try {
+                 Notificacion mensaje = Notificacion.builder()
+                         .tipo("Pago confirmado")
+                         .email(usuario.getEmail())
+                         .numeroTelefono(usuario.getNumeroTelefono())
+                         .mensaje("¡Hola " + usuario.getNombre() + "! Tu pago ha sido confirmado. " +
+                                 "Referencia: " + referencia + ". Tu pedido #" + pago.getPedidoId() +
+                                 " será enviado pronto.")
+                         .build();
+
+                 notificationGateway.enviarMensaje(mensaje);
+             } catch (Exception e) {
+                 System.err.println("Error al enviar notificación: " + e.getMessage());
+             }
 
             return pagoGuardado;
 

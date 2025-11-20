@@ -17,7 +17,7 @@ public class PedidoUseCase {
     private final PagoUseCase pagoUseCase;
     private final CatalogoGateway catalogGateway;
     private final UsuarioGateway usuarioGateway;
-//    private final NotificationGateway notificationGateway; // ✅ Agregar
+    private final NotificationGateway notificationGateway; // ✅ Agregar
 
     /**
      * Crea un nuevo pedido desde el carrito de un usuario.
@@ -96,23 +96,23 @@ public class PedidoUseCase {
         }
 
 //        // ✅ 9️⃣ Enviar notificación AL FINAL (cuando todo salió bien)
-//        try {
-//            Notificacion mensaje = Notificacion.builder()
-//                    .tipo("Pedido Confirmado")
-//                    .email(usuario.getEmail())
-//                    .numeroTelefono(usuario.getNumeroTelefono())
-//                    .mensaje("¡Hola " + usuario.getNombre() + "! Tu pedido #" + pedidoGuardado.getId() +
-//                            " ha sido confirmado. Estado: " + pedidoGuardado.getEstado() +
-//                            ". Tipo de pago: " + pedidoGuardado.getTipoPago() +
-//                            ". Se enviará a: " + pedidoGuardado.getDireccionEnvio() +
-//                            ". Total: $" + total)
-//                    .build();
-//
-//            notificationGateway.enviarMensaje(mensaje);
-//        } catch (Exception e) {
-//            // No lanzar excepción si falla la notificación
-//            System.err.println("Error al enviar notificación: " + e.getMessage());
-//        }
+        try {
+            Notificacion mensaje = Notificacion.builder()
+                    .tipo("Pedido Confirmado")
+                    .email(usuario.getEmail())
+                    .numeroTelefono(usuario.getNumeroTelefono())
+                    .mensaje("¡Hola " + usuario.getNombre() + "! Tu pedido #" + pedidoGuardado.getId() +
+                            " ha sido confirmado. Estado: " + pedidoGuardado.getEstado() +
+                            ". Tipo de pago: " + pedidoGuardado.getTipoPago() +
+                            ". Se enviará a: " + pedidoGuardado.getDireccionEnvio() +
+                            ". Total: $" + total)
+                    .build();
+
+            notificationGateway.enviarMensaje(mensaje);
+        } catch (Exception e) {
+            // No lanzar excepción si falla la notificación
+            System.err.println("Error al enviar notificación: " + e.getMessage());
+        }
 
         return pedidoGuardado;
     }
