@@ -64,6 +64,8 @@ public class CatalogoGatewayImpl implements CatalogoGateway {
         }
     }
 
+    // Reponer stock
+
     @Override
     public void reponerStock(Long productoId, Integer cantidad) {
         try {
