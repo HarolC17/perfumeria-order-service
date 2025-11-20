@@ -19,4 +19,8 @@ public class PedidoResponseDTO {
     private String tipoPago;
     private LocalDateTime fechaPedido;
     private List<ItemPedidoDTO> items;
+
+    private Long idPago;            // nuevo
+    private String estadoPago;      // nuevo
+    private String referenciaPago;  // nuevo
 }

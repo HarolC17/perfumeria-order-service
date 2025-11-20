@@ -4,9 +4,11 @@ package com.perfumeria.order.infrastructure.mapper;
 import com.perfumeria.order.domain.model.ItemPedido;
 import com.perfumeria.order.domain.model.Pedido;
 import com.perfumeria.order.infrastructure.driver_adapters.jpa_repository.itempedido.ItemPedidoData;
+import com.perfumeria.order.infrastructure.driver_adapters.jpa_repository.pago.PagoDataJpaRepository;
 import com.perfumeria.order.infrastructure.driver_adapters.jpa_repository.pedido.PedidoData;
 import com.perfumeria.order.infrastructure.entry_points.dto.ItemPedidoDTO;
 import com.perfumeria.order.infrastructure.entry_points.dto.PedidoResponseDTO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -15,7 +17,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class MapperPedido {
+
+    private final PagoDataJpaRepository pagoDataJpaRepository;
 
     public PedidoData toData(Pedido pedido) {
         if (pedido == null) return null;
@@ -103,6 +108,14 @@ public class MapperPedido {
                     .map(this::toItemDTO)
                     .collect(Collectors.toList()));
         }
+
+        // 🔽 Cargar info de pago asociada
+        pagoDataJpaRepository.findByPedido_IdPedido(pedido.getId())
+                .ifPresent(pago -> {
+                    dto.setIdPago(pago.getIdPago());
+                    dto.setEstadoPago(pago.getEstadoPago());
+                    dto.setReferenciaPago(pago.getReferenciaTransaccion());
+                });
 
         return dto;
     }
