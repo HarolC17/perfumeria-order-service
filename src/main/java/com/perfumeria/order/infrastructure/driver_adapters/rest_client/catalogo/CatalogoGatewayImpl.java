@@ -1,5 +1,7 @@
 package com.perfumeria.order.infrastructure.driver_adapters.rest_client.catalogo;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.perfumeria.order.domain.exception.StockInsuficienteException;
 import com.perfumeria.order.domain.model.ItemPedido;
 import com.perfumeria.order.domain.model.gateway.CatalogoGateway;
 import com.perfumeria.order.infrastructure.entry_points.dto.ReponerStockDTO;
@@ -7,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -59,11 +62,25 @@ public class CatalogoGatewayImpl implements CatalogoGateway {
                     null,
                     Void.class
             );
+        } catch (HttpClientErrorException.BadRequest ex) {
+            // Error 400: normalmente por stock insuficiente
+            try {
+                // Extrae el campo "mensaje" del body JSON de error
+                String body = ex.getResponseBodyAsString();
+                ObjectMapper mapper = new ObjectMapper();
+                String mensaje = mapper.readTree(body).get("mensaje").asText();
+                throw new StockInsuficienteException(mensaje);
+            } catch (Exception parse) {
+                throw new StockInsuficienteException("Stock insuficiente para completar el pedido.");
+            }
+        } catch (HttpClientErrorException ex) {
+            // Otros errores HTTP, reprocesa o lanza excepción más general
+            throw new RuntimeException("Error HTTP en catálogo: " + ex.getStatusCode() + " - " + ex.getResponseBodyAsString(), ex);
         } catch (Exception ex) {
+            // Otros errores generales
             throw new RuntimeException("Error al procesar la venta en catálogo", ex);
         }
     }
-
     // Reponer stock
 
     @Override
