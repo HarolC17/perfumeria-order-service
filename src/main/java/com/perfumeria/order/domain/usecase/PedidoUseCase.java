@@ -141,11 +141,10 @@ public class PedidoUseCase {
             throw new CampoObligatorioException("El ID del usuario es obligatorio.");
         }
 
-        List<Pedido> pedidos = pedidoGateway.obtenerPedidosPorUsuario(usuarioId);
-        if (pedidos == null || pedidos.isEmpty()) {
-            throw new PedidoNoEncontradoException("El usuario no tiene pedidos registrados.");
-        }
+        UserInfo usuario = usuarioGateway.obtenerUsuario(usuarioId);
 
-        return pedidos;
+        // Si el usuario sí existe, simplemente retorna la lista (puede ser vacía, está bien)
+        List<Pedido> pedidos = pedidoGateway.obtenerPedidosPorUsuario(usuarioId);
+        return pedidos; // <-- ¡No lances excepción si la lista está vacía!
     }
 }

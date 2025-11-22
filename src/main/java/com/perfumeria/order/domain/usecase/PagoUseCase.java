@@ -17,7 +17,7 @@ public class PagoUseCase {
     private final PedidoGateway pedidoGateway;
     private final CatalogoGateway catalogoGateway;
     private final UsuarioGateway usuarioGateway;
-    private final NotificationGateway notificationGateway; // 🔔 Descomentar cuando implementes SNS
+    private final NotificationGateway notificationGateway; // 🔔 Descomentar cuando se implemente SNS
 
     /**
      * Registrar un nuevo pago
@@ -119,7 +119,7 @@ public class PagoUseCase {
             // Guardar el pago
             Pago pagoGuardado = pagoGateway.guardarPago(pago);
 
-            // 🔔 NOTIFICACIÓN SMS (Descomenta cuando implementes AWS SNS)
+            // 🔔 NOTIFICACIÓN SMS
              try {
                  Notificacion mensaje = Notificacion.builder()
                          .tipo("Pago confirmado")
