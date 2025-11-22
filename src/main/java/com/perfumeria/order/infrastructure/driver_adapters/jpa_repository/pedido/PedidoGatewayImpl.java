@@ -41,16 +41,15 @@ public class PedidoGatewayImpl implements PedidoGateway {
         try {
             List<PedidoData> pedidos = pedidoRepository.findByUsuarioId(usuarioId);
 
-            if (pedidos == null || pedidos.isEmpty()) {
-                throw new PedidoNoEncontradoException("No se encontraron pedidos para el usuario con ID: " + usuarioId);
+            // Quita el throw aquí: permite devolver lista vacía
+            if (pedidos == null) {
+                return List.of(); // Devuelve lista vacía si es null
             }
 
             return pedidos.stream()
                     .map(mapperPedido::toDomain)
                     .collect(Collectors.toList());
-        } catch (PedidoNoEncontradoException e) {
-            throw e;
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new PedidoPersistenciaException("Error al consultar los pedidos del usuario: " + e.getMessage());
         }
     }
